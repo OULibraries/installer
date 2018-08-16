@@ -27,7 +27,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ```
 * Download and run the mtf-pi-install script.
 ```
-	$ wget https://raw.githubusercontent.com/OULibraries/installer/master/mtf-pi-install.sh
+	$ wget https://raw.githubusercontent.com/OULibraries/mtf-installer/master/mtf-pi-install.sh
 	$ chmod +x mtf-pi-install.sh
 	$ sudo ./mtf-pi-install.sh
 ```
