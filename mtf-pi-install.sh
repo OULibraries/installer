@@ -4,11 +4,7 @@
 echo -ne "Preparing Raspbian... "
 sudo apt-get -y purge --auto-remove gvfs-backends gvfs-fuse &> /dev/null
 sudo apt-get -y install vim &> /dev/null
-<<<<<<< HEAD
 sudo ip link set wlan0 up
-=======
-sudo iplink set wlan0 up
->>>>>>> master
 echo -ne " Done\n"
 
 # Install OpenCV Dependencies
@@ -18,39 +14,28 @@ sudo apt-get -y install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev &> /
 sudo apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev &> /dev/null
 sudo apt-get -y install libxvidcore-dev libx264-dev &> /dev/null
 sudo apt-get -y install libatlas-base-dev gfortran &> /dev/null
-sudo apt-get -y install libgtk2.0-dev
-<<<<<<< HEAD
-sudo apt-get -y install python2.7-dev python3-dev openjdk-8-jdk
-=======
-sudo apt-get -y install python2.7-dev python3-dev
->>>>>>> master
-sudo apt-get -y install -f
-sudo apt-get -y install hostapd
+sudo apt-get -y install libgtk2.0-dev  &> /dev/null
+sudo apt-get -y install python2.7-dev python3-dev 
+sudo apt-get -y install openjdk-8-jdk &> /dev/null
+sudo apt-get -y install -f &> /dev/null
+sudo apt-get -y install hostapd &> /dev/null
+if [ ! -d "/etc/hostapd" ]; then 
 sudo mkdir /etc/hostapd
+fi
 sudo touch /etc/hostapd/hostapd.conf
 #Install OpenCV and OpenCV_Contrib from Official Git Repository
 echo -ne "Installing OpenCV from Official Git Repository"
-<<<<<<< HEAD
 if [ ! -d "opencv" ]; then
 git clone https://github.com/opencv/opencv_contrib.git
 git clone https://github.com/opencv/opencv.git
 fi
-=======
-git clone https://github.com/opencv/opencv_contrib.git
-git clone https://github.com/opencv/opencv.git
->>>>>>> master
 pip install numpy
 cd opencv
 mkdir build
 cd build
-<<<<<<< HEAD
 #Check build, setting to build examples due to unsure if it is a dependency somewhere else, could speed it up dramatically if set to OFF
 echo -ne "Checking enviornment and generating make file headers, this might take a minute or two"
-if [ ! -d "opencv/build/bin" ]; then
-=======
-#Check build
-echo -ne "Checking enviornment and generating make file headers, this might take a minute or two"
->>>>>>> master
+if [ ! -d "bin" ]; then
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D INSTALL_PYTHON_EXAMPLES=ON \
@@ -64,11 +49,9 @@ make -j4
 echo -ne "Installing package"
 sudo make install
 sudo ldconfig
-<<<<<<< HEAD
 fi
 
-=======
->>>>>>> master
+
 echo -ne "Symlinking package for import"
 ln -s /usr/local/lib/python2.7/dist-packages/cv2.so cv2.so
 
