@@ -7,11 +7,10 @@ This installer configures the Measure the Future project on a Raspberry Pi 3 Mod
 
 ## Regular Installation (Raspberry Pi)
 
-THESE INSTRUCTIONS ARE DEPRECATED - Please visit http://measurethefuture.net/build/ for the current instructions.
 
 * Install Raspbian
 
-Download [Raspbian Jessie (2016-11-25)](https://www.raspberrypi.org/downloads/raspbian/) and follow the installation instructions for [installing images](https://www.raspberrypi.org/documentation/installation/installing-images/).
+Download [Raspbian](https://www.raspberrypi.org/raspbian_latest) and follow the installation instructions for [installing images](https://www.raspberrypi.org/documentation/installation/installing-images/).
 
 * Enable SSH
 
@@ -28,7 +27,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ```
 * Download and run the mtf-pi-install script.
 ```
-	$ wget https://raw.githubusercontent.com/MeasureTheFuture/installer/master/mtf-pi-install.sh
+	$ wget https://raw.githubusercontent.com/OULibraries/mtf-installer/master/mtf-pi-install.sh
 	$ chmod +x mtf-pi-install.sh
 	$ sudo ./mtf-pi-install.sh
 ```
