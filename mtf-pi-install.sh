@@ -101,6 +101,7 @@ echo -ne " Done\n"
 # Spin up the mothership and scout.
 echo -ne "Starting Measure the Future..."
 sudo cat > /lib/systemd/system/mtf-pi-scout.service <<EOF
+tsleep=$(which sleep)
 [Unit]
 Description=The Measure the Future scout
 After=postgresql.service
@@ -108,6 +109,7 @@ After=postgresql.service
 [Service]
 Environment=LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 WorkingDirectory=/usr/local/mtf/bin
+ExecStartPre=$tsleep 10
 ExecStart=/usr/local/mtf/bin/scout
 
 [Install]
