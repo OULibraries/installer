@@ -199,7 +199,7 @@ EOF
 
 sudo systemctl daemon-reload &> /dev/null
 sleep 5
-sudo systemctl start hostapd &> /dev/null
+sudo systemctl restart hostapd &> /dev/null
 sudo systemctl enable hostapd &> /dev/null
 
 echo -ne " Done\n"
