@@ -155,7 +155,7 @@ EOF
 sudo cat > /lib/systemd/system/hostapd.service <<EOF
 [Unit]
 Description=Hostapd IEEE 802.11 Access Point
-After=sys-subsystem-net-devices-wlan0.device
+After=sys-subsystem-net-devices-wlan0.device mtf-pi-scout.service
 BindsTo=sys-subsystem-net-devices-wlan0.device
 
 [Service]
