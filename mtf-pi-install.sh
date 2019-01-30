@@ -2,6 +2,8 @@
 
 # Tidy up the Raspbian installation.
 echo -ne "Preparing Raspbian... "
+sudo apt-get update -y
+sudo apt-get upgrade -y
 sudo apt-get -y purge --auto-remove gvfs-backends gvfs-fuse &> /dev/null
 sudo apt-get -y install vim &> /dev/null
 sudo ip link set wlan0 up
@@ -24,37 +26,37 @@ sudo mkdir /etc/hostapd
 fi
 sudo touch /etc/hostapd/hostapd.conf
 #Install OpenCV and OpenCV_Contrib from Official Git Repository
-echo -ne "Installing OpenCV from Official Git Repository"
-if [ ! -d "opencv" ]; then
-git clone https://github.com/opencv/opencv_contrib.git
-git clone https://github.com/opencv/opencv.git
-fi
-pip install numpy
-cd opencv
-mkdir build
-cd build
-#Check build, setting to build examples due to unsure if it is a dependency somewhere else, could speed it up dramatically if set to OFF
-echo -ne "Checking enviornment and generating make file headers, this might take a minute or two"
-if [ ! -d "bin" ]; then
-cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D INSTALL_PYTHON_EXAMPLES=ON \
-    -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-    -D BUILD_EXAMPLES=ON ..
-
-#Generate make file
-echo -ne "Generating make file, this will take at least an hour, grab a coffee and take a deep breath"
-make -j4
-#Install package 
-echo -ne "Installing package"
-sudo make install
-sudo ldconfig
-fi
-
-
-echo -ne "Symlinking package for import"
-ln -s /usr/local/lib/python2.7/dist-packages/cv2.so cv2.so
-
+#echo -ne "Installing OpenCV from Official Git Repository"
+#if [ ! -d "opencv" ]; then
+#git clone https://github.com/opencv/opencv_contrib.git
+#git clone https://github.com/opencv/opencv.git
+#fi
+#pip install numpy
+#cd opencv
+#mkdir build
+#cd build
+##Check build, setting to build examples due to unsure if it is a dependency somewhere else, could speed it up dramatically if set to OFF
+#echo -ne "Checking enviornment and generating make file headers, this might take a minute or two"
+#if [ ! -d "bin" ]; then
+#cmake -D CMAKE_BUILD_TYPE=RELEASE \
+#    -D CMAKE_INSTALL_PREFIX=/usr/local \
+#    -D INSTALL_PYTHON_EXAMPLES=ON \
+#    -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+#    -D BUILD_EXAMPLES=ON ..
+#
+##Generate make file
+#echo -ne "Generating make file, this will take at least an hour, grab a coffee and take a deep breath"
+#make -j4
+##Install package 
+#echo -ne "Installing package"
+#sudo make install
+#sudo ldconfig
+#fi
+#
+#
+#echo -ne "Symlinking package for import"
+#ln -s /usr/local/lib/python2.7/dist-packages/cv2.so cv2.so
+#
 echo -ne "Begin Measure The Future Installation instructions"
 wget https://github.com/MeasureTheFuture/CVBindings/releases/download/3.4.1/cvbindings_3.4.1_armhf.deb &> /dev/null
 sudo dpkg -i cvbindings_3.4.1_armhf.deb &> /dev/null
@@ -83,7 +85,7 @@ sudo sed -i -e "s/password/${mtf_database_pass}/g" /usr/local/mtf/bin/scout.json
 sudo cat > /home/pi/db-bootstrap.sql <<EOF
 CREATE DATABASE mothership;
 CREATE DATABASE mothership_test;
-CREATE USER mothership_user WITH password :pass;
+CREATE USER mothership_user WITH password $mtf_database_pass;
 ALTER ROLE mothership_user SET client_encoding TO 'utf8';
 ALTER ROLE mothership_user SET default_transaction_isolation TO 'read committed';
 ALTER ROLE mothership_user SET timezone TO 'UTC';
@@ -100,8 +102,8 @@ echo -ne " Done\n"
 
 # Spin up the mothership and scout.
 echo -ne "Starting Measure the Future..."
-sudo cat > /lib/systemd/system/mtf-pi-scout.service <<EOF
 tsleep=$(which sleep)
+sudo cat > /lib/systemd/system/mtf-pi-scout.service <<EOF
 [Unit]
 Description=The Measure the Future scout
 After=postgresql.service
@@ -118,7 +120,7 @@ WantedBy=multi-user.target
 EOF
 
 sudo systemctl daemon-reload &> /dev/null
-sudo systemctl start mtf-pi-scout.service &> /dev/null
+sudo systemctl restart mtf-pi-scout.service &> /dev/null
 sudo systemctl enable mtf-pi-scout.service &> /dev/null
 echo -ne " Done\n"
 
