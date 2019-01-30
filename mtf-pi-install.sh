@@ -85,7 +85,7 @@ sudo sed -i -e "s/password/${mtf_database_pass}/g" /usr/local/mtf/bin/scout.json
 sudo cat > /home/pi/db-bootstrap.sql <<EOF
 CREATE DATABASE mothership;
 CREATE DATABASE mothership_test;
-CREATE USER mothership_user WITH password $mtf_database_pass;
+CREATE USER mothership_user WITH password '$mtf_database_pass';
 ALTER ROLE mothership_user SET client_encoding TO 'utf8';
 ALTER ROLE mothership_user SET default_transaction_isolation TO 'read committed';
 ALTER ROLE mothership_user SET timezone TO 'UTC';
