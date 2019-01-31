@@ -82,7 +82,7 @@ read mtf_database_pass
 echo -ne "Configuring postgreSQL... \n"
 sudo sed -i -e "s/password/${mtf_database_pass}/g" /usr/local/mtf/bin/scout.json
 
-sudo cat > /home/pi/db-bootstrap.sql <<EOF
+sudo cat > /usr/local/mtf/bin/db-bootstrap.sql <<EOF
 CREATE DATABASE mothership;
 CREATE DATABASE mothership_test;
 CREATE USER mothership_user WITH password '$mtf_database_pass';
@@ -96,7 +96,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 EOF
 
-sudo -E -u postgres psql -v pass="'${mtf_database_pass}'" -f db-bootstrap.sql &> /dev/null
+sudo -E -u postgres psql -v pass="'${mtf_database_pass}'" -f /usr/local/mtf/bin/db-bootstrap.sql &> /dev/null
 migrate -database postgres://mothership_user:"${mtf_database_pass}"@localhost:5432/mothership -path /usr/local/mtf/bin/migrations up &> /dev/null
 echo -ne " Done\n"
 
@@ -148,6 +148,9 @@ interface wlan0
 	static ip_address=10.0.0.1/24
 EOF
 
+echo -ne "Would you like to hide SSID? Y/N"
+read ssid_hidden
+
 sudo cat >> /etc/default/hostapd <<EOF
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
 EOF
@@ -167,6 +170,7 @@ ExecStart=/usr/sbin/hostapd -B /etc/hostapd/hostapd.conf -P /var/run/hostapd.pid
 WantedBy=multi-user.target
 
 EOF
+
 
 sudo cat > /etc/dnsmasq.conf <<EOF
 interface=wlan0
@@ -189,6 +193,11 @@ wpa_passphrase=$APPASS
 ssid=$APSSID
 EOF
 
+if [ "$ssid_hidden" = "Y" ] || [ "$ssid_hidden" = "y" ]
+then
+	echo "ignore_broadcast_ssid=1" >> /etc/hostapd/hostapd.conf
+fi
+ 
 sudo sed -i -- 's/allow-hotplug wlan0//g' /etc/network/interfaces
 sudo sed -i -- 's/iface wlan0 inet manual//g' /etc/network/interfaces
 sudo sed -i -- 's/    wpa-conf \/etc\/wpa_supplicant\/wpa_supplicant.conf//g' /etc/network/interfaces
